@@ -73,3 +73,13 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+
+#Custom
+*.sdf
+*.suo
+*.opensdf
+VRRacer/Build/
+VRRacer/Intermediate/
+VRRacer/Saved/
+VRRacer/Binaries/
