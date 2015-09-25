@@ -73,7 +73,7 @@ $RECYCLE.BIN/
 *.lnk
 
 
-#Custom
+# Custom
 *.sdf
 *.suo
 *.opensdf
@@ -82,3 +82,6 @@ $RECYCLE.BIN/
 VRRacer/Build/
 VRRacer/Saved/
 VRRacer/Binaries/
+
+# Unfortunately Git doesn't allow files bigger than 100 MB, which is no good for unreal.
+*.umap
