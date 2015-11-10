@@ -18,11 +18,11 @@
 		{
 			"Name": "NullSourceCodeAccess",
 			"Enabled": false
-		},
+		}
 	],
 	"TargetPlatforms": [
+		"WindowsNoEditor",
 		"LinuxNoEditor",
-		"MacNoEditor",
-		"WindowsNoEditor"
+		"MacNoEditor"
 	]
 }
