@@ -82,6 +82,10 @@ VRRacer/Build/
 VRRacer/Saved/
 VRRacer/Binaries/
 
+#Joystick plugin built .dll's
+VRRacer/Plugins/JoystickPlugin/Binaries/Win64/UE4-JoystickPlugin-Win64-Shipping.lib
+VRRacer/Plugins/JoystickPlugin/Binaries/Win64/UE4-JoystickPlugin.lib
+
 #Files that are too large to store in the repo
 VRRacer/Content/ProceduralNaturePack/Textures/ground_mud_no_puddle_nrm_8192.uasset
 VRRacer/Content/ProceduralNaturePack/Textures/ground_mud_no_puddle_bsm_8192.uasset
@@ -89,3 +93,7 @@ VRRacer/Content/ProceduralNaturePack/Textures/ground_mud_no_puddle_rgm_8192.uass
 VRRacer/Content/ProceduralNaturePack/Textures/ground_mud_bsm_8192.uasset
 VRRacer/Content/ProceduralNaturePack/Textures/ground_mud_nrm_8192.uasset
 VRRacer/Content/ProceduralNaturePack/Textures/ground_mud_rgm_8192.uasset
+VRRacer/Content/ProceduralNaturePack/EPIC_StarterContent/
+VRRacer/Content/ProceduralNaturePack/Assets_Overview.umap
+VRRacer/Content/ProceduralNaturePack/Demo_Scene.umap
+Textures.rar
