@@ -81,3 +81,11 @@ $RECYCLE.BIN/
 VRRacer/Build/
 VRRacer/Saved/
 VRRacer/Binaries/
+
+#Files that are too large to store in the repo
+VRRacer/Content/ProceduralNaturePack/Textures/ground_mud_no_puddle_nrm_8192.uasset
+VRRacer/Content/ProceduralNaturePack/Textures/ground_mud_no_puddle_bsm_8192.uasset
+VRRacer/Content/ProceduralNaturePack/Textures/ground_mud_no_puddle_rgm_8192.uasset
+VRRacer/Content/ProceduralNaturePack/Textures/ground_mud_bsm_8192.uasset
+VRRacer/Content/ProceduralNaturePack/Textures/ground_mud_nrm_8192.uasset
+VRRacer/Content/ProceduralNaturePack/Textures/ground_mud_rgm_8192.uasset
