@@ -18,6 +18,10 @@
 		{
 			"Name": "NullSourceCodeAccess",
 			"Enabled": false
+		},
+		{
+			"Name": "SoundVisualizations",
+			"Enabled": true
 		}
 	],
 	"TargetPlatforms": [
