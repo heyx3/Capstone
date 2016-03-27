@@ -2,6 +2,8 @@
 
 #include "VRRacer.h"
 #include "ShipMetaball.h"
+//#include <SoundVisualizations.generated.dep.h>
+//#include <SoundVisualizationsPlugin.h>
 
 #include <string>
 
@@ -22,6 +24,10 @@ AShipMetaball::AShipMetaball()
     //Default values.
 
     localBallForce = FVector::ZeroVector;
+
+    VelocityScale = 1.0f;
+
+    TimeSinceMusicStart = 0.0f;
 
     BallPushback = 2.0f;
     BallPushbackRadiusScale = 0.5f;
@@ -132,7 +138,7 @@ void AShipMetaball::ResetVelocities()
 // Called every frame
 void AShipMetaball::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
+    Super::Tick(DeltaTime);
 
     if (UpdateVels != 0)
     {
@@ -141,8 +147,11 @@ void AShipMetaball::Tick(float DeltaTime)
     }
 
     UpdateRenderingStuff(true);
-
-
+    UpdateBallPhysics(DeltaTime);
+    UpdateMusicStuff(DeltaTime);
+}
+void AShipMetaball::UpdateBallPhysics(float DeltaTime)
+{
     //Update ball physics.
     FTransform tr = GetTransform();
     for (int32 i = 0; i < N_BALLS; ++i)
@@ -194,7 +203,7 @@ void AShipMetaball::Tick(float DeltaTime)
         }
 
         //Apply velocity.
-        ballPos += ballVel * DeltaTime;
+        ballPos += ballVel * VelocityScale * DeltaTime;
 
         //If the ball is outside the edge of the bounds, snap back.
         if (ballPos.X < -1.0f)
@@ -234,6 +243,28 @@ void AShipMetaball::Tick(float DeltaTime)
     }
 
     localBallForce = FVector::ZeroVector;
+}
+void AShipMetaball::UpdateMusicStuff(float deltaTime)
+{
+    musicSamples.Reset(20);
+
+
+    const int audioSampleIndex = 2,
+              spectrumWidth = 5;
+    const float maxSampleVal = 40.0f,
+                sampleInterval = 0.15f;
+    USoundWave* music = Cast<USoundWave>(GameMusic->Sound);
+    
+    //ISoundVisualizationsPlugin::Get();
+    //USoundVisualizationStatics::CalculateFrequencySpectrum(music, 0,
+    //                                                       TimeSinceMusicStart - (sampleInterval * 0.5f), 
+    //                                                       sampleInterval, spectrumWidth,
+    //                                                       musicSamples);
+    if (musicSamples.Num() > audioSampleIndex)
+    {
+        CurrentEmissive = FMath::Lerp(MinEmissive, MaxEmissive,
+                                      FMath::Min(1.0f, musicSamples[audioSampleIndex] / maxSampleVal));
+    }
 }
 
 void AShipMetaball::UpdateRenderingStuff(bool updateTex)

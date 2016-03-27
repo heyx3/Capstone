@@ -42,6 +42,9 @@ public:
     TArray<FVector> BallVelocities;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Metaball Sim")
+    float VelocityScale;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Metaball Sim")
     float BallPushback;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Metaball Sim")
     float BallPushbackRadiusScale;
@@ -71,6 +74,11 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Metaball Rendering")
     FColor BallColor;
 
+    UPROPERTY(BlueprintReadWrite, Category = "Metaball Rendering")
+    UAudioComponent* GameMusic;
+    UPROPERTY(BlueprintReadWrite, Category = "Metaball Rendering")
+    float TimeSinceMusicStart;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Debug")
     int32 UpdateVels;
 
@@ -80,6 +88,10 @@ public:
 private:
 
     void UpdateRenderingStuff(bool updateTex);
+    void UpdateBallPhysics(float deltaTime);
+    void UpdateMusicStuff(float deltaTime);
+
 
     FVector localBallForce;
+    TArray<float> musicSamples;
 };

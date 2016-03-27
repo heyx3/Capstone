@@ -6,6 +6,8 @@ public class VRRacer : ModuleRules
 {
 	public VRRacer(TargetInfo Target)
 	{
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "eXiSoundVis" });
+		//PrivateDependencyModuleNames.AddRange(new string[] { "SoundVisualizations" });
+		//PrivateIncludePathModuleNames.AddRange(new string[] { "SoundVisualizations" });
 	}
 }
