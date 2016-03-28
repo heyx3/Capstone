@@ -1,9 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "VRRacer.h"
-#include "ShipMetaball.h"
 
 #include <string>
+
+#include "ShipMetaball.h"
 
 
 namespace
@@ -23,17 +24,22 @@ AShipMetaball::AShipMetaball()
 
     localBallForce = FVector::ZeroVector;
 
+    VelocityScale = 1.0f;
+
+    TimeSinceMusicStart = 0.0f;
+
     BallPushback = 2.0f;
     BallPushbackRadiusScale = 0.5f;
 
     MinEmissive = 0.5f;
-    MaxEmissive = 20.0f;
+    MaxEmissive = 1.0f;
     Thinness = 100.0f;
     Increment = 8.0f;
     RadiusScale = 1.0f;
     CurrentEmissive = 0.5f;
     VoidColor = FColor::White;
     BallColor = FColor::White;
+    Hack_PosOffset = FVector(0.0f, 0.0f, 0.0f);
 
     UpdateVels = 0;
 
@@ -94,18 +100,15 @@ AShipMetaball::AShipMetaball()
         BallRadii.Add(0.25f);
     }
 
-
-    //Create a dynamic version of the metaball material.
+    //Find the metaball material.
     static ConstructorHelpers::FObjectFinder<UMaterial> mat(TEXT("Material'/Game/My_Content/Materials/MetaballMat.MetaballMat'"));
     if (mat.Succeeded())
     {
-        MetaballMat = MyRenderBox->CreateAndSetMaterialInstanceDynamicFromMaterial(0, mat.Object);
-        UpdateRenderingStuff(false);
-        MyRenderBox->SetMaterial(0, MetaballMat);
+        baseMetaballMat = mat.Object;
     }
     else
     {
-        MetaballMat = nullptr;
+        baseMetaballMat = nullptr;
     }
 }
 void AShipMetaball::PostInitializeComponents()
@@ -117,6 +120,18 @@ void AShipMetaball::PostInitializeComponents()
 void AShipMetaball::BeginPlay()
 {
 	Super::BeginPlay();
+
+    //Create a dynamic version of the metaball material.
+    if (baseMetaballMat != nullptr)
+    {
+        MetaballMat = UMaterialInstanceDynamic::Create(baseMetaballMat, this);
+        MyRenderBox->SetMaterial(0, MetaballMat);
+        UpdateRenderingStuff(false);
+    }
+    else
+    {
+        MetaballMat = nullptr;
+    }
 }
 
 void AShipMetaball::AddBallForce(FVector worldForce)
@@ -132,7 +147,7 @@ void AShipMetaball::ResetVelocities()
 // Called every frame
 void AShipMetaball::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
+    Super::Tick(DeltaTime);
 
     if (UpdateVels != 0)
     {
@@ -141,10 +156,13 @@ void AShipMetaball::Tick(float DeltaTime)
     }
 
     UpdateRenderingStuff(true);
+    UpdateBallPhysics(DeltaTime);
 
-
+    CurrentEmissive = FMath::Lerp(MinEmissive, MaxEmissive, GetCurrentEmissiveLerp(DeltaTime));
+}
+void AShipMetaball::UpdateBallPhysics(float DeltaTime)
+{
     //Update ball physics.
-    FTransform tr = GetTransform();
     for (int32 i = 0; i < N_BALLS; ++i)
     {
         FVector& ballVel = BallVelocities[i];
@@ -194,7 +212,7 @@ void AShipMetaball::Tick(float DeltaTime)
         }
 
         //Apply velocity.
-        ballPos += ballVel * DeltaTime;
+        ballPos += ballVel * VelocityScale * DeltaTime;
 
         //If the ball is outside the edge of the bounds, snap back.
         if (ballPos.X < -1.0f)
@@ -227,10 +245,6 @@ void AShipMetaball::Tick(float DeltaTime)
             ballPos.Z = 1.0f;
             ballVel.Z = FMath::Min(0.0f, ballVel.Z);
         }
-
-#if UE_BUILD_DEBUG
-    GEngine>AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Test");
-#endif
     }
 
     localBallForce = FVector::ZeroVector;
@@ -239,6 +253,8 @@ void AShipMetaball::Tick(float DeltaTime)
 void AShipMetaball::UpdateRenderingStuff(bool updateTex)
 {
     MetaballMat = Cast<UMaterialInstanceDynamic>(MyRenderBox->GetMaterial(0));
+    if (MetaballMat == nullptr)
+        return;
 
     MetaballMat->SetScalarParameterValue(TEXT("Emissive Brightness"), CurrentEmissive);
     MetaballMat->SetScalarParameterValue(TEXT("Threshold"), Thinness);
@@ -251,13 +267,14 @@ void AShipMetaball::UpdateRenderingStuff(bool updateTex)
     }
     MetaballMat->SetScalarParameterValue(TEXT("Void Texture Scale"), VoidTexScale);
 
+
     for (int32 i = 0; i < N_BALLS; ++i)
     {
-        FVector pos = GetTransform().TransformPosition(BallPoses[i]);
+        FVector pos = BallPoses[i];
         float radius = BallRadii[i] * RadiusScale;
 
         FString str = TEXT("Ball ");
-        str.Append(FString::FromInt(i));
+        str.Append(FString::FromInt(i + 1));
 
         FString str2 = str;
         str2.Append(" Pos");

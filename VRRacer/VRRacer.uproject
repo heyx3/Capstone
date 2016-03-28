@@ -24,7 +24,7 @@
 		},
 		{
 			"Name": "SoundVisualizations",
-			"Enabled": true
+			"Enabled": false
 		}
 	],
 	"TargetPlatforms": [

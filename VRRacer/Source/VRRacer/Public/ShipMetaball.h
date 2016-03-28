@@ -3,9 +3,11 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
+
 #include "ShipMetaball.generated.h"
 
-UCLASS()
+
+UCLASS(Blueprintable)
 class VRRACER_API AShipMetaball : public AActor
 {
 	GENERATED_BODY()
@@ -29,8 +31,10 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Metaball Sim")
     void ResetVelocities();
 
-	
-    UStaticMeshComponent *MyRenderBox, *MyGlassContainer;
+	UPROPERTY(BlueprintReadOnly, Category = "Components")
+    UStaticMeshComponent* MyRenderBox;
+    UPROPERTY(BlueprintReadOnly, Category = "Components")
+    UStaticMeshComponent* MyGlassContainer;
 
     UMaterialInstanceDynamic *MetaballMat;
 
@@ -42,6 +46,9 @@ public:
     TArray<FVector> BallVelocities;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Metaball Sim")
+    float VelocityScale;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Metaball Sim")
     float BallPushback;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Metaball Sim")
     float BallPushbackRadiusScale;
@@ -50,7 +57,7 @@ public:
     float MinEmissive;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Metaball Rendering")
     float MaxEmissive;
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Metaball Rendering")
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Metaball Rendering")
     float CurrentEmissive;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Metaball Rendering")
@@ -71,15 +78,31 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Metaball Rendering")
     FColor BallColor;
 
+    UPROPERTY(BlueprintReadWrite, Category = "Metaball Rendering")
+    UAudioComponent* GameMusic;
+    UPROPERTY(BlueprintReadWrite, Category = "Metaball Rendering")
+    float TimeSinceMusicStart;
+
+
+    UFUNCTION(BlueprintImplementableEvent, Category = "Metaball Sim")
+    float GetCurrentEmissiveLerp(float deltaTime);
+
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Debug")
     int32 UpdateVels;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Debug")
+    FString ToPrint;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hack Fixes")
+    FVector Hack_PosOffset;
 
-    //TODO: Music.
 
 private:
 
     void UpdateRenderingStuff(bool updateTex);
+    void UpdateBallPhysics(float deltaTime);
+
 
     FVector localBallForce;
+    UMaterial* baseMetaballMat;
 };
