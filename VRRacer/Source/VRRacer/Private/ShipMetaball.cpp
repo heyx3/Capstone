@@ -1,11 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "VRRacer.h"
-#include "ShipMetaball.h"
-//#include <SoundVisualizations.generated.dep.h>
-//#include <SoundVisualizationsPlugin.h>
 
 #include <string>
+
+#include "ShipMetaball.h"
 
 
 namespace
@@ -33,13 +32,14 @@ AShipMetaball::AShipMetaball()
     BallPushbackRadiusScale = 0.5f;
 
     MinEmissive = 0.5f;
-    MaxEmissive = 20.0f;
+    MaxEmissive = 1.0f;
     Thinness = 100.0f;
     Increment = 8.0f;
     RadiusScale = 1.0f;
     CurrentEmissive = 0.5f;
     VoidColor = FColor::White;
     BallColor = FColor::White;
+    Hack_PosOffset = FVector(0.0f, 0.0f, 0.0f);
 
     UpdateVels = 0;
 
@@ -100,18 +100,15 @@ AShipMetaball::AShipMetaball()
         BallRadii.Add(0.25f);
     }
 
-
-    //Create a dynamic version of the metaball material.
+    //Find the metaball material.
     static ConstructorHelpers::FObjectFinder<UMaterial> mat(TEXT("Material'/Game/My_Content/Materials/MetaballMat.MetaballMat'"));
     if (mat.Succeeded())
     {
-        MetaballMat = MyRenderBox->CreateAndSetMaterialInstanceDynamicFromMaterial(0, mat.Object);
-        UpdateRenderingStuff(false);
-        MyRenderBox->SetMaterial(0, MetaballMat);
+        baseMetaballMat = mat.Object;
     }
     else
     {
-        MetaballMat = nullptr;
+        baseMetaballMat = nullptr;
     }
 }
 void AShipMetaball::PostInitializeComponents()
@@ -123,6 +120,18 @@ void AShipMetaball::PostInitializeComponents()
 void AShipMetaball::BeginPlay()
 {
 	Super::BeginPlay();
+
+    //Create a dynamic version of the metaball material.
+    if (baseMetaballMat != nullptr)
+    {
+        MetaballMat = UMaterialInstanceDynamic::Create(baseMetaballMat, this);
+        MyRenderBox->SetMaterial(0, MetaballMat);
+        UpdateRenderingStuff(false);
+    }
+    else
+    {
+        MetaballMat = nullptr;
+    }
 }
 
 void AShipMetaball::AddBallForce(FVector worldForce)
@@ -148,12 +157,12 @@ void AShipMetaball::Tick(float DeltaTime)
 
     UpdateRenderingStuff(true);
     UpdateBallPhysics(DeltaTime);
-    UpdateMusicStuff(DeltaTime);
+
+    CurrentEmissive = FMath::Lerp(MinEmissive, MaxEmissive, GetCurrentEmissiveLerp(DeltaTime));
 }
 void AShipMetaball::UpdateBallPhysics(float DeltaTime)
 {
     //Update ball physics.
-    FTransform tr = GetTransform();
     for (int32 i = 0; i < N_BALLS; ++i)
     {
         FVector& ballVel = BallVelocities[i];
@@ -236,40 +245,16 @@ void AShipMetaball::UpdateBallPhysics(float DeltaTime)
             ballPos.Z = 1.0f;
             ballVel.Z = FMath::Min(0.0f, ballVel.Z);
         }
-
-#if UE_BUILD_DEBUG
-    GEngine>AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Test");
-#endif
     }
 
     localBallForce = FVector::ZeroVector;
-}
-void AShipMetaball::UpdateMusicStuff(float deltaTime)
-{
-    musicSamples.Reset(20);
-
-
-    const int audioSampleIndex = 2,
-              spectrumWidth = 5;
-    const float maxSampleVal = 40.0f,
-                sampleInterval = 0.15f;
-    USoundWave* music = Cast<USoundWave>(GameMusic->Sound);
-    
-    //ISoundVisualizationsPlugin::Get();
-    //USoundVisualizationStatics::CalculateFrequencySpectrum(music, 0,
-    //                                                       TimeSinceMusicStart - (sampleInterval * 0.5f), 
-    //                                                       sampleInterval, spectrumWidth,
-    //                                                       musicSamples);
-    if (musicSamples.Num() > audioSampleIndex)
-    {
-        CurrentEmissive = FMath::Lerp(MinEmissive, MaxEmissive,
-                                      FMath::Min(1.0f, musicSamples[audioSampleIndex] / maxSampleVal));
-    }
 }
 
 void AShipMetaball::UpdateRenderingStuff(bool updateTex)
 {
     MetaballMat = Cast<UMaterialInstanceDynamic>(MyRenderBox->GetMaterial(0));
+    if (MetaballMat == nullptr)
+        return;
 
     MetaballMat->SetScalarParameterValue(TEXT("Emissive Brightness"), CurrentEmissive);
     MetaballMat->SetScalarParameterValue(TEXT("Threshold"), Thinness);
@@ -282,13 +267,14 @@ void AShipMetaball::UpdateRenderingStuff(bool updateTex)
     }
     MetaballMat->SetScalarParameterValue(TEXT("Void Texture Scale"), VoidTexScale);
 
+
     for (int32 i = 0; i < N_BALLS; ++i)
     {
-        FVector pos = GetTransform().TransformPosition(BallPoses[i]);
+        FVector pos = BallPoses[i];
         float radius = BallRadii[i] * RadiusScale;
 
         FString str = TEXT("Ball ");
-        str.Append(FString::FromInt(i));
+        str.Append(FString::FromInt(i + 1));
 
         FString str2 = str;
         str2.Append(" Pos");

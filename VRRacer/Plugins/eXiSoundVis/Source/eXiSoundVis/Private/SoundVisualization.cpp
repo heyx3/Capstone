@@ -58,11 +58,15 @@ bool USoundVisualization::LoadSoundFileFromHD(const FString& _FilePath)
 		return false;
 	}
 
+    return LoadSoundFromAsset(SW);
+}
+bool USoundVisualization::LoadSoundFromAsset(USoundWave* _SW)
+{
 	// Get the PCMSampleBuffer filled
-	GetPCMDataFromFile(SW, 0.0f, SW->Duration, true);
+	GetPCMDataFromFile(_SW, 0.0f, _SW->Duration, true);
 
 	// Return the pointer to the loaded SoundWave
-	CurrentSoundWave = SW;
+	CurrentSoundWave = _SW;
 
 	return true;
 }
@@ -143,6 +147,10 @@ void USoundVisualization::GetPCMDataFromFile(USoundWave* _SoundWave, float _Star
 bool USoundVisualization::SV_LoadSoundFileFromHD(const FString _FilePath)
 {
 	return LoadSoundFileFromHD(_FilePath);
+}
+bool USoundVisualization::SV_LoadSoundFromAsset(USoundWave* _SW)
+{
+    return LoadSoundFromAsset(_SW);
 }
 
 bool USoundVisualization::SV_LoadAllSoundFileNamesFromHD(const FString _DirectoryPath, const bool _bAbsolutePath, const bool _bFullPath, const FString _FileExtension, TArray<FString>& _SoundFileNames)

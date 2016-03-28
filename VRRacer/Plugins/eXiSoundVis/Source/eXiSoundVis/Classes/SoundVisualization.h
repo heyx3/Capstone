@@ -99,7 +99,9 @@ public:
 
 	~USoundVisualization();
 
-	/// Functions to load Data from the HardDrive ///
+	/// Functions to load Data ///
+
+    bool LoadSoundFromAsset(USoundWave* _SW);
 
 	// Function to load a sound file from the HD
 	bool LoadSoundFileFromHD(const FString& _FilePath);
@@ -140,7 +142,10 @@ public:
 	*
 	*/
 	UFUNCTION(BlueprintCallable, Category = "SoundVis | SoundFile")
-		bool SV_LoadSoundFileFromHD(const FString _FilePath);
+	bool SV_LoadSoundFileFromHD(const FString _FilePath);
+
+    UFUNCTION(BlueprintCallable, Category = "SoundVis | SoundFile")
+    bool SV_LoadSoundFromAsset(USoundWave* _SW);
 
 	/**
 	* Will get an Array of Names of the Found SoundFiles
@@ -153,7 +158,7 @@ public:
 	*
 	*/
 	UFUNCTION(BlueprintCallable, Category = "SoundVis | SoundFile")
-		bool SV_LoadAllSoundFileNamesFromHD(const FString _DirectoryPath, const bool _bAbsolutePath, const bool _bFullPath, const FString _FileExtension, TArray<FString>& _SoundFileNames);
+	bool SV_LoadAllSoundFileNamesFromHD(const FString _DirectoryPath, const bool _bAbsolutePath, const bool _bFullPath, const FString _FileExtension, TArray<FString>& _SoundFileNames);
 
 	/// Blueprint Versions of the Analyze Functions ///
 
