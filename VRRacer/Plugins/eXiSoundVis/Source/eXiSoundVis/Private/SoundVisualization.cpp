@@ -75,7 +75,7 @@ bool USoundVisualization::LoadSoundFromAsset(USoundWave* _SW)
 int USoundVisualization::FillSoundWaveInfo(class USoundWave* _SW, TArray<uint8>* _RawFile)
 {
 	FSoundQualityInfo SQInfo;
-	FVorbisAudioInfo VorbisAudioInfo = FVorbisAudioInfo();
+	FVorbisAudioInfo VorbisAudioInfo;// = FVorbisAudioInfo();
 
 	// Save the CompressedData in SQInfo
 	if (!VorbisAudioInfo.ReadCompressedInfo(_RawFile->GetData(), _RawFile->Num(), &SQInfo))
@@ -933,7 +933,7 @@ bool FAudioDecompressWorker::IsThreadFinished()
 
 void FAudioDecompressWorker::Exit()
 {
-	Thread->Kill();
+	Thread->Kill(false);
 }
 
 
