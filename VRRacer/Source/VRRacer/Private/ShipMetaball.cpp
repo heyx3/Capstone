@@ -39,7 +39,6 @@ AShipMetaball::AShipMetaball()
     CurrentEmissive = 0.5f;
     VoidColor = FColor::White;
     BallColor = FColor::White;
-    Hack_PosOffset = FVector(0.0f, 0.0f, 0.0f);
 
     UpdateVels = 0;
 

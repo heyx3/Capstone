@@ -93,9 +93,6 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Debug")
     FString ToPrint;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hack Fixes")
-    FVector Hack_PosOffset;
-
 
 private:
 
