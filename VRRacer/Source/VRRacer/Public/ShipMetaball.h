@@ -53,6 +53,9 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Metaball Sim")
     float BallPushbackRadiusScale;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Metaball Sim")
+    float TurnRate;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Metaball Rendering")
     float MinEmissive;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Metaball Rendering")

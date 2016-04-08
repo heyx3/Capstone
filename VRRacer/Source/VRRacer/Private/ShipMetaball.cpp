@@ -37,6 +37,7 @@ AShipMetaball::AShipMetaball()
     Increment = 8.0f;
     RadiusScale = 1.0f;
     CurrentEmissive = 0.5f;
+    TurnRate = 1.0f;
     VoidColor = FColor::White;
     BallColor = FColor::White;
 
@@ -173,6 +174,10 @@ void AShipMetaball::UpdateBallPhysics(float DeltaTime)
         //Apply force to the ball.
         ballVel += localBallForce * DeltaTime;
 
+        //float angle = (float)i * TurnRate * DeltaTime;
+       // FRotator rot(angle, angle, angle);
+        //rot.RotateVector(ballVel);
+
         //If it's being crushed against the edge of the bounds, push back.
         float p;
         float temp = BallPushback * invRad;
@@ -202,7 +207,7 @@ void AShipMetaball::UpdateBallPhysics(float DeltaTime)
             float distSqr = (scaledRad + jRad);
             distSqr *= distSqr;
 
-            if (FVector::DistSquared(ballPos, BallPoses[j]))
+            if (FVector::DistSquared(ballPos, BallPoses[j]) < distSqr)
             {
                 FVector forceForI = DeltaTime * BallPushback * (ballPos - BallPoses[j]);
                 ballVel += forceForI * invRad;
