@@ -81,11 +81,6 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Metaball Rendering")
     FColor BallColor;
 
-    UPROPERTY(BlueprintReadWrite, Category = "Metaball Rendering")
-    UAudioComponent* GameMusic;
-    UPROPERTY(BlueprintReadWrite, Category = "Metaball Rendering")
-    float TimeSinceMusicStart;
-
 
     UFUNCTION(BlueprintImplementableEvent, Category = "Metaball Sim")
     float GetCurrentEmissiveLerp(float deltaTime);

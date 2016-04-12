@@ -26,8 +26,6 @@ AShipMetaball::AShipMetaball()
 
     VelocityScale = 1.0f;
 
-    TimeSinceMusicStart = 0.0f;
-
     BallPushback = 2.0f;
     BallPushbackRadiusScale = 0.5f;
 
