@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "4.11",
+	"EngineAssociation": "4.14",
 	"Category": "",
 	"Description": "",
 	"Modules": [
@@ -20,10 +20,6 @@
 		},
 		{
 			"Name": "NullSourceCodeAccess",
-			"Enabled": false
-		},
-		{
-			"Name": "SoundVisualizations",
 			"Enabled": false
 		}
 	],

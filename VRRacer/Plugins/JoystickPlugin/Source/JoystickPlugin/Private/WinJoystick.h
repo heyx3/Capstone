@@ -464,7 +464,7 @@ namespace {
 		//return S_OK;
 	}
 
-	INT_PTR WINAPI WinProcCallback(
+	LRESULT WINAPI WinProcCallback(
 		HWND hWnd,
 		UINT message,
 		WPARAM wParam,

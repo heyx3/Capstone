@@ -8,7 +8,18 @@ namespace UnrealBuildTool.Rules
 	{
         private string ModulePath
         {
-            get { return Path.GetDirectoryName(RulesCompiler.GetModuleFilename(this.GetType().Name)); }
+            get
+			{
+				RulesAssembly r;
+				FileReference CheckProjectFile;
+				UProjectInfo.TryGetProjectForTarget("VRRacer", out CheckProjectFile);
+
+				r = RulesCompiler.CreateProjectRulesAssembly(CheckProjectFile);
+				FileReference f = r.GetModuleFileName(this.GetType().Name);
+
+				return Path.GetDirectoryName(f.CanonicalName);
+				//return Path.GetDirectoryName(RulesCompiler.GetModuleFilename(this.GetType().Name));
+			}
         }
 
 		/*

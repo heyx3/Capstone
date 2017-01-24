@@ -1,5 +1,0 @@
-#include "Engine.h"
-#include "CoreUObject.h"
-#include "eXiSoundVisPlugin.h"
-#include "ThirdParty/Kiss_FFT/kiss_fft129/kiss_fft.h"
-#include "ThirdParty/Kiss_FFT/kiss_fft129/tools/kiss_fftnd.h"
